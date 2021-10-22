@@ -1,0 +1,181 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: white;
+    color: black;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+
+}
+.dark-mode {
+    width: 100vw;
+    height: 120vh;
+    background: rgba(38,38,38,1);
+    color: white;
+}
+.top-dark {
+    background-color: rgba(255,255,255,.2) !important;
+    border-color: rgba(255,255,255,.3) !important;
+}
+
+.top-head {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    bottom: auto;
+}
+
+
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+
+#content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: auto;
+}
+#content img {
+    margin: auto;
+}
+    #content input {
+        width: 200px;
+        margin: auto;
+    }
+    #content button {
+        width: auto;
+        margin-left: 1px;
+        
+    }
+    #content .qr-form {
+        display: block;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1px;
+    }
+    #content label {
+        margin-right: 166px;
+        margin-bottom: 0;
+    }
+
+.qr-container {
+    margin: 20px;
+    margin-bottom: 5px;
+}
+    .qr-container img {
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+        height: 400px;
+    }
+
+.Light-Link {
+    color: rgba(0, 0, 0, .3);
+}
+.Light-Link:hover {
+    color: rgba(0, 0, 0, .8);
+}
+
+.Dark-Link {
+    color: rgba(255, 255, 255, .8);
+}
+.Dark-Link:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.coffee-div {
+    margin-bottom: 100px;
+}
+
+.coffee-btn {
+    font-size: 1.1rem;
+    background: rgba(137, 255, 165, 1);
+    color: black;
+    border-radius: 5px;
+    padding: 20px 20px;
+    margin-top: 100px;
+}
+    .coffee-btn:hover {
+        color: black;
+        text-decoration: none;
+        background: rgba(137, 255, 165, .7);
+        margin-bottom: 20px;
+    }
+
+.radio-container {
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+
+.qr-wifi {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
+
+.paper-class {
+    width: 440px;
+    Margin: auto;
+    margin-bottom: 10px;
+    padding-top: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    .qr-container img {
+        width: 300px;
+        height: 300px;
+    }
+    .paper-class {
+        width: 340px;
+    }
+
+    html, body {
+        overflow: auto;
+    }
+    #content h1 {
+        font-size: 2rem;
+    }
+}

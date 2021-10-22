@@ -1,0 +1,100 @@
+﻿
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="currentTheme" />
+
+<div class="page">
+
+    <div class="main">
+        
+        <MudLayout>
+            <MudAppBar Elevation="1" Dense="true">
+                <MudIconButton Icon="@Icons.Material.Filled.QrCode2" Color="Color.Inherit" Edge="Edge.Start" Link="/" />
+                <MudText >Qude</MudText>
+                <MudSpacer />
+                <MudButton OnClick="@((e) => DarkMode())">Toggle Dark/Light Mode</MudButton>
+                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/pingu1337/qude" Target="_blank" />
+            </MudAppBar>
+            <MudMainContent>
+                <div class="content px-4">
+                    @Body
+
+                </div>
+            </MudMainContent>
+        </MudLayout>
+    </div>
+</div>
+
+
+
+
+@code
+{
+
+    MudTheme currentTheme = new MudTheme();
+    MudTheme defaultTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#272c34",
+            Primary = Colors.Pink.Lighten3,
+            AppbarBackground = Colors.Pink.Lighten3,
+
+        }
+    };
+
+    void DarkMode()
+    {
+        if (currentTheme == defaultTheme)
+        {
+            currentTheme = darkTheme;
+        }
+        else
+        {
+            currentTheme = defaultTheme;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.Now.Hour >= 20 || DateTime.Now.Hour <= 08 )
+        {
+            // DARK_MODE
+            currentTheme = darkTheme;
+        }
+        else
+        {
+            //LIGHT_MODE
+            currentTheme = defaultTheme;
+        }
+    }
+
+    MudTheme darkTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = Colors.Pink.Lighten3,
+            Black = "#27272f",
+            Background = "#32333d",
+            BackgroundGrey = "#27272f",
+            Surface = "#373740",
+            DrawerBackground = "#27272f",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "#27272f",
+            AppbarText = Colors.Pink.Lighten3,
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+            DividerLight = "rgba(255,255,255, 0.06)",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)"
+        }
+    };
+
+}

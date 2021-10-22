@@ -1,0 +1,279 @@
+﻿@page "/"
+@using QRCoder
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+@using Color = MudBlazor.Color
+@using System.Threading;
+@using MudBlazor.Utilities
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager uriHelper;
+
+
+<div id="content">
+
+    <h1>QR Code Generator</h1>
+
+    @if (!coffee)
+    {
+        <div class="radio-container">
+            <MudForm>
+                <MudRadioGroup @bind-SelectedOption="@SelectedOption" Style="display: flex;">
+                    <MudRadio Style="margin-left: 10px; margin-right:16px;" Option="@("Radio 1")" Color="Color.Primary">url</MudRadio>
+                    <MudRadio Option="@("Radio 2")" Color="Color.Primary">wifi</MudRadio>
+                </MudRadioGroup>
+            </MudForm>
+        </div>
+    }
+    else
+    {
+
+        <MudPaper Class="paper-class">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" @onclick="@ForceReload">New QR Code</MudButton>
+            <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
+                <MudText Style="padding: 10px;" Color="Color.Tertiary">Enjoy this free online tool?</MudText>
+                <MudButton Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">Buy me a Coffee</MudButton>
+            </div>
+        </MudPaper>
+    }
+
+    @if (SelectedOption == "Radio 1")
+    {
+        @if (!coffee)
+        {
+
+
+            <MudCard Style="Margin: auto; width: 300px; padding: 20px;">
+                <MudCardContent>
+                    <MudForm @ref="urlForm" >
+                        <MudText>Generate QR-code <i class="fas fa-qrcode" style="margin-left: 2px;"></i></MudText>
+                        <MudTextField @bind-Value="@InputText" Label="Url" HelperText="e.g. https://www.wikipedia.com" Variant="Variant.Outlined" Required="true" RequiredError="url required" />
+
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" @onclick="@(async () => await UrlSubmit())">Submit</MudButton>
+                    </MudForm>
+                </MudCardContent>
+                <MudExpansionPanels>
+                    <MudExpansionPanel Text="Color" MaxHeight="170">
+                        <MudColorPicker HelperText="Tip: select a light background color" style="@($"color:{ShowColorB};")" Label="Background" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorB" ValueChanged="UpdateSelectedColor1" />
+                            <MudColorPicker HelperText="Tip: select a darker foreground color" style="@($"color:{ShowColorF};")" Label="Foreground" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorF" ValueChanged="UpdateSelectedColor2" />
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudCard>
+        }
+    }
+
+    @if (SelectedOption == "Radio 2")
+    {
+        @if (!coffee)
+        {
+            <MudCard Style="Margin:auto; width: 300px; padding:20px;">
+                <MudCardContent>
+                    <MudForm @ref="wifiForm">
+                        <MudText>Generate QR-code for WiFi <i class="fas fa-wifi" style="margin-left: 2px;"></i></MudText>
+                        <MudTextField @bind-Value="@WifiName" Label="ssid" HelperText="wifi name" Variant="Variant.Outlined" Required="true" RequiredError="WiFi name required" />
+
+                        <MudTextField @bind-Value="@WifiPass" Label="password" HelperText="wifi password" Variant="Variant.Outlined" />
+
+                        <MudSelect @bind-Value="@WifiAuthType" Required="true" RequiredError="Please select authentication" Label="Authentication" AnchorOrigin="Origin.BottomCenter" Style="Margin-bottom:10px;">
+                            <MudSelectItem Value="@("WPA/WPA2")" />
+                            <MudSelectItem Value="@("WEP")" />
+                            <MudSelectItem Value="@("No Password")" />
+                        </MudSelect>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" @onclick="@(async () => await WifiSubmit())">Submit</MudButton>
+                    </MudForm>
+                </MudCardContent>
+                <MudExpansionPanels>
+                    <MudExpansionPanel Text="Color" MaxHeight="170">
+                        <MudColorPicker HelperText="Tip: select a light background color" style="@($"color:{ShowColorB};")" Label="Background" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorB" ValueChanged="UpdateSelectedColor1" />
+                        <MudColorPicker HelperText="Tip: select a darker foreground color" style="@($"color:{ShowColorF};")" Label="Foreground" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorF" ValueChanged="UpdateSelectedColor2" />
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudCard>
+
+        }
+    }
+
+
+    @if (!string.IsNullOrEmpty(QRCodeStr))
+    {
+        <MudPaper MaxWidth="auto" Style="Margin: auto;">
+            <div class="qr-container">
+                <img src="@QRCodeStr" />
+            </div>
+            
+            <MudButton Link="@QRCodeStr" download="QR-Code" target="_top" Variant="Variant.Outlined" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowDownward" Style="margin-bottom: 20px;" > Download</MudButton>
+        </MudPaper>
+    }
+    @if (!coffee)
+    {
+    <MudPaper Width="300px" Style="Margin:auto; margin-top: 20px;">
+
+        <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
+            <MudText Style="padding: 10px;" Color="Color.Tertiary">Enjoy this free online tool?</MudText>
+            <MudButton Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">Buy me a Coffee</MudButton>
+        </div>
+    </MudPaper>
+    }
+</div>
+
+
+@code
+{
+    //Url vars
+    string InputText { get; set; }
+    string QRCodeStr { get; set; }
+    MudForm urlForm;
+
+    //WiFi vars
+    string WifiName { get; set; }
+    string WifiPass { get; set; }
+    string WifiAuthType { get; set; } = "No Password";
+    MudForm wifiForm;
+
+    //General vars
+    string SelectedOption { get; set; } = "Radio 1";
+    bool coffee = false;
+
+    //Color-Picker vars
+    public MudColor _pickerColorB = "#FFFFFF";
+    public MudColor _pickerColorF = "#000000";
+    public MudColor ShowColorB = "#FFFFFF";
+    public MudColor ShowColorF = "#000000";
+    public string BgColor = "#FFFFFF";
+    public string FgColor = "#000000";
+    bool _isFirstColor = true;
+
+    private async Task UrlSubmit()
+    {
+        await urlForm.Validate();
+        if (urlForm.IsValid)
+        {
+            GenerateQR();
+        }
+    }
+    private async Task WifiSubmit()
+    {
+        await wifiForm.Validate();
+        if (wifiForm.IsValid)
+        {
+            GenerateQR();
+        }
+    }
+
+    void GenerateQR()
+    {
+        QRCodeStr = "";
+
+        if (SelectedOption == "Radio 1")
+        {
+            if (!string.IsNullOrEmpty(InputText))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(InputText, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(20, BgColor, FgColor);
+
+                    qrCodeImage.Save(ms, ImageFormat.Png);
+                    QRCodeStr = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                    InputText = "";
+                    coffee = true;
+                }
+            }
+            else
+            {
+                coffee = false;
+            }
+        }
+        if (SelectedOption == "Radio 2")
+        {
+            if (!string.IsNullOrEmpty(WifiName))
+            {
+                if (string.IsNullOrEmpty(WifiPass))
+                {
+                    WifiPass = "";
+                }
+                var WifiAuth = PayloadGenerator.WiFi.Authentication.nopass;
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+
+                    if (WifiAuthType == "WPA/WPA2")
+                    {
+                        WifiAuth = PayloadGenerator.WiFi.Authentication.WPA;
+
+                    }
+                    if (WifiAuthType == "WEP")
+                    {
+
+                        WifiAuth = PayloadGenerator.WiFi.Authentication.WEP;
+                    }
+                    if (WifiAuthType == "No Password")
+                    {
+                        WifiAuth = PayloadGenerator.WiFi.Authentication.nopass;
+                        WifiPass = "";
+                    }
+
+
+                    PayloadGenerator.WiFi _wifigenerator = new PayloadGenerator.WiFi(WifiName, WifiPass, WifiAuth);
+                    string payload = _wifigenerator.ToString();
+                    payload = payload.Replace("\"", "");
+
+
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(20, BgColor, FgColor);
+
+                    qrCodeImage.Save(ms, ImageFormat.Png);
+                    QRCodeStr = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                    WifiName = "";
+                    WifiPass = "";
+                    coffee = true;
+                }
+            }
+            else
+            {
+                coffee = false;
+            }
+        }
+    }
+
+
+    public void UpdateSelectedColor1(MudColor value)
+    {
+        _pickerColorB = value;
+        ShowColorB = _pickerColorB;
+        FgColor = value.Value;
+        FgColor = FgColor.Substring(0, 7);
+
+    }
+    public void UpdateSelectedColor2(MudColor value)
+    {
+        _pickerColorF = value;
+        ShowColorF = _pickerColorF;
+        BgColor = value.Value;
+        BgColor = BgColor.Substring(0, 7);
+    }
+
+    public void ForceReload()
+    {
+        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+    }
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter")
+        {
+            GenerateQR();
+        }
+        else
+        {
+
+        }
+    }
+
+}
