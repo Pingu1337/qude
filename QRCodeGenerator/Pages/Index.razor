@@ -28,7 +28,6 @@
     }
     else
     {
-
         <MudPaper Class="paper-class">
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" @onclick="@ForceReload">New QR Code</MudButton>
             <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
@@ -42,8 +41,6 @@
     {
         @if (!coffee)
         {
-
-
             <MudCard Style="Margin: auto; width: 300px; padding: 20px;">
                 <MudCardContent>
                     <MudForm @ref="urlForm" >
@@ -90,11 +87,8 @@
                     </MudExpansionPanel>
                 </MudExpansionPanels>
             </MudCard>
-
         }
     }
-
-
     @if (!string.IsNullOrEmpty(QRCodeStr))
     {
         <MudPaper MaxWidth="auto" Style="Margin: auto;">
@@ -142,7 +136,6 @@
     public MudColor ShowColorF = "#000000";
     public string BgColor = "#FFFFFF";
     public string FgColor = "#000000";
-    bool _isFirstColor = true;
 
     private async Task UrlSubmit()
     {
@@ -263,17 +256,4 @@
     {
         uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
     }
-
-    public void Enter(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter")
-        {
-            GenerateQR();
-        }
-        else
-        {
-
-        }
-    }
-
 }
