@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CurrieTechnologies.Razor.Clipboard;
 using MudBlazor.Services;
 
 namespace QRCodeGenerator
@@ -29,6 +30,7 @@ namespace QRCodeGenerator
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();
+            services.AddClipboard();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

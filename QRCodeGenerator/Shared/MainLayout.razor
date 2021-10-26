@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 
 <MudThemeProvider Theme="currentTheme" />
+<MudSnackbarProvider />
 
 <div class="page">
 
@@ -9,7 +10,7 @@
         
         <MudLayout>
             <MudAppBar Elevation="1" Dense="true">
-                <MudIconButton Icon="@Icons.Material.Filled.QrCode2" Color="Color.Inherit" Edge="Edge.Start" Link="/" />
+                <MudIconButton Icon="@Icons.Material.Filled.QrCode2" Color="Color.Inherit" Edge="Edge.Start" Link="https://www.qude.pl/" />
                 <MudText >Qude</MudText>
                 <MudSpacer />
                 <MudButton OnClick="@((e) => DarkMode())">Toggle Dark/Light Mode</MudButton>
@@ -18,8 +19,8 @@
             <MudMainContent>
                 <div class="content px-4">
                     @Body
-
                 </div>
+
             </MudMainContent>
         </MudLayout>
     </div>
@@ -27,12 +28,11 @@
 
 
 
-
 @code
 {
-
     MudTheme currentTheme = new MudTheme();
     MudTheme defaultTheme = new MudTheme()
+
     {
         Palette = new Palette()
         {

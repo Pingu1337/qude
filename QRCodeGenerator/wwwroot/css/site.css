@@ -4,7 +4,7 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: white;
     color: black;
-    overflow: hidden;
+    overflow-x: hidden;
     height: 100%;
     width: 100%;
 
@@ -73,6 +73,8 @@ html, body {
     margin-right: auto;
     text-align: center;
     width: auto;
+    overflow-x: hidden;
+    padding-bottom: 6rem;
 }
 #content img {
     margin: auto;

@@ -6,10 +6,12 @@
 @using Color = MudBlazor.Color
 @using System.Threading;
 @using MudBlazor.Utilities
+@using CurrieTechnologies.Razor.Clipboard
 
 @inject IJSRuntime JSRuntime
-@inject NavigationManager uriHelper;
-
+@inject NavigationManager uriHelper
+@inject ClipboardService clipboard
+@inject ISnackbar Snackbar
 
 <div id="content">
 
@@ -30,9 +32,11 @@
     {
         <MudPaper Class="paper-class">
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" @onclick="@ForceReload">New QR Code</MudButton>
-            <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
+            <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column;">
                 <MudText Style="padding: 10px;" Color="Color.Tertiary">Enjoy this free online tool?</MudText>
-                <MudButton Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">Buy me a Coffee</MudButton>
+                <MudButton Style="width: 210px; margin-left: auto; margin-right: auto; " Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">  Buy me a Coffee  </MudButton>
+                <MudButton Style="width: 210px; margin-top: 10px; margin-left: auto; margin-right: auto; " Variant="Variant.Outlined" EndIcon="@Icons.Custom.Brands.Twitter" Color="Color.Info" Link="https://twitter.com/intent/tweet?hashtags=QRcode&original_referer=https%3A%2F%2Flocalhost%3A44364%2F&ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Eshare%7Ctwgr%5E&related=%40PinguOnl%2C%40PinguOnl&text=QR-Codes%20have%20never%20been%20easier%20to%20generate!%20Check%20out%20this%20amazing%20free%20webapp!&url=https%3A%2F%2Fwww.qude.pl%2F" target="_blank">  Share on Twitter  </MudButton>
+                <MudButton Style="width: 210px; margin-top: 10px; margin-left: auto; margin-right: auto; " Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Code" Color="Color.Secondary" @onclick="@(async e => { await clipboard.WriteTextAsync(textValue); Snackbar.Add("Embed code copied to clipboard!", Severity.Info);})">Embed this website</MudButton>
             </div>
         </MudPaper>
     }
@@ -43,7 +47,7 @@
         {
             <MudCard Style="Margin: auto; width: 300px; padding: 20px;">
                 <MudCardContent>
-                    <MudForm @ref="urlForm" >
+                    <MudForm @ref="urlForm">
                         <MudText>Generate QR-code <i class="fas fa-qrcode" style="margin-left: 2px;"></i></MudText>
                         <MudTextField @bind-Value="@InputText" Label="Url" HelperText="e.g. https://www.wikipedia.com" Variant="Variant.Outlined" Required="true" RequiredError="url required" />
 
@@ -53,7 +57,7 @@
                 <MudExpansionPanels>
                     <MudExpansionPanel Text="Color" MaxHeight="170">
                         <MudColorPicker HelperText="Tip: select a light background color" style="@($"color:{ShowColorB};")" Label="Background" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorB" ValueChanged="UpdateSelectedColor1" />
-                            <MudColorPicker HelperText="Tip: select a darker foreground color" style="@($"color:{ShowColorF};")" Label="Foreground" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorF" ValueChanged="UpdateSelectedColor2" />
+                        <MudColorPicker HelperText="Tip: select a darker foreground color" style="@($"color:{ShowColorF};")" Label="Foreground" ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX" DisableAlpha="true" DisableModeSwitch="true" Value="_pickerColorF" ValueChanged="UpdateSelectedColor2" />
                     </MudExpansionPanel>
                 </MudExpansionPanels>
             </MudCard>
@@ -95,22 +99,32 @@
             <div class="qr-container">
                 <img src="@QRCodeStr" />
             </div>
-            
-            <MudButton Link="@QRCodeStr" download="QR-Code" target="_top" Variant="Variant.Outlined" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowDownward" Style="margin-bottom: 20px;" > Download</MudButton>
+            <MudButton Link="@QRCodeStr" download="www.qude.pl QR_Code.png" target="_top" Variant="Variant.Outlined" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowDownward" Style="margin-bottom: 20px;"> Download</MudButton>
         </MudPaper>
     }
     @if (!coffee)
     {
-    <MudPaper Width="300px" Style="Margin:auto; margin-top: 20px;">
+        <MudPaper Width="300px" Style="Margin:auto; margin-top: 20px;">
 
-        <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
-            <MudText Style="padding: 10px;" Color="Color.Tertiary">Enjoy this free online tool?</MudText>
-            <MudButton Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">Buy me a Coffee</MudButton>
-        </div>
-    </MudPaper>
+            <div class="coffee-div" style="margin-top: 10px; margin-bottom: 50px;">
+                <MudText Style="padding: 10px;" Color="Color.Tertiary">Enjoy this free online tool?</MudText>
+                <MudButton Style="width: 210px;" Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Coffee" Color="Color.Tertiary" Link="https://www.buymeacoffee.com/p1ngu" target="_blank">  Buy me a Coffee  </MudButton>
+                <MudButton Style="width: 210px; margin-top:10px;" Variant="Variant.Outlined" EndIcon="@Icons.Custom.Brands.Twitter" Color="Color.Info" Link="https://twitter.com/intent/tweet?hashtags=QRcode&original_referer=https%3A%2F%2Flocalhost%3A44364%2F&ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Eshare%7Ctwgr%5E&related=%40PinguOnl%2C%40PinguOnl&text=QR-Codes%20have%20never%20been%20easier%20to%20generate!%20Check%20out%20this%20amazing%20free%20webapp!&url=https%3A%2F%2Fwww.qude.pl%2F" target="_blank">  Share on Twitter  </MudButton>
+                <MudButton Style="width: 210px; margin-top:10px;" Variant="Variant.Outlined" EndIcon="@Icons.Outlined.Code" Color="Color.Secondary" @onclick="@(async e => { await clipboard.WriteTextAsync(textValue); Snackbar.Add("Embed code copied to clipboard!", Severity.Info);})">Embed this website</MudButton>
+            </div>
+        </MudPaper>
     }
+
+
+    
+
 </div>
 
+<style>
+    .colpick {
+        background: red;
+    }
+</style>
 
 @code
 {
@@ -130,12 +144,17 @@
     bool coffee = false;
 
     //Color-Picker vars
-    public MudColor _pickerColorB = "#FFFFFF";
-    public MudColor _pickerColorF = "#000000";
-    public MudColor ShowColorB = "#FFFFFF";
-    public MudColor ShowColorF = "#000000";
-    public string BgColor = "#FFFFFF";
-    public string FgColor = "#000000";
+    public MudColor _pickerColorF = "#fadceb";
+    public MudColor _pickerColorB = "#470630";
+    public MudColor ShowColorF = "#fadceb";
+    public MudColor ShowColorB = "#470630";
+    public string FgColor = "#fadceb";
+    public string BgColor = "#470630";
+
+    //Embedd_vars
+    string textValue = "<div style=\"display: flex; flex-direction: column; width: 400px\"><embed type=\"text/html\" src=\"https://qude.pl/\" width=\"400\" height=\"500\"><a href=\"https://qude.pl/\" target=\"_blank\" style=\"background: rgba(0,255,0,.3); height: 40px; text-decoration: none;\"><p style=\"text-decoration: none; color: black; text-align: center; font-family: helvetica; margin-top: 10px; font-size: 20px;\">Generate Free QR-Code</p></a></div>";
+
+
 
     private async Task UrlSubmit()
     {
@@ -255,5 +274,11 @@
     public void ForceReload()
     {
         uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+    }
+
+    protected override void OnInitialized()
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+        Snackbar.Configuration.SnackbarVariant = Variant.Text;
     }
 }
